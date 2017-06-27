@@ -41,6 +41,9 @@ public class FlowPeoplePO {
     /** 用户id **/
     private Integer userId;
 
+    /** 人员类型1：房主，2:租客 **/
+    private Byte type;
+
     public Integer getId() {
         return id;
     }
@@ -167,5 +170,15 @@ public class FlowPeoplePO {
     /** 用户id **/
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    /** 人员类型1：房主，2:租客 **/
+    public Byte getType() {
+        return type;
+    }
+
+    /** 人员类型1：房主，2:租客 **/
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

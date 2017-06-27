@@ -37,12 +37,6 @@ public class FlowPeopleController {
     @Autowired
     private FlowRenterBiz flowRenterBiz;
 
-    /** 流动人口类型 **/
-    private final Integer FLOW_PEOPLE = 1;
-
-    /** 房屋类型 **/
-    private final Integer FLOW_RENTER = 2;
-
     @RequestMapping(value = "peoples", method = RequestMethod.POST)
     @ResponseBody
     public ResultDTO addFlowPeople(@RequestBody FlowPeopleVO flowPeopleVO,
@@ -55,9 +49,12 @@ public class FlowPeopleController {
         Integer uid = request.getIntHeader("uid");
         uid = uid == null ? Utils.getUid(uid, request.getCookies()) : uid;
 
-        FlowPeopleBO flowPeoplePO = BeanConverter.convertObj(flowPeopleVO, FlowPeopleBO.class);
-        flowPeoplePO.setUserId(uid);
-        Integer result = flowPeopleBiz.addFlowPeople(flowPeoplePO);
+        FlowPeopleBO flowPeopleBO = BeanConverter.convertObj(flowPeopleVO, FlowPeopleBO.class);
+        flowPeopleBO.setUserId(uid);
+        if (flowPeopleBO.getType() == null){
+            flowPeopleBO.setType(Constants.FLOW_PEOPLE);
+        }
+        Integer result = flowPeopleBiz.addFlowPeople(flowPeopleBO);
         ResultDTO resultDTO = null;
 
         if (null == result) {
@@ -103,6 +100,7 @@ public class FlowPeopleController {
         FlowPeopleBO peopleBO = new FlowPeopleBO();
         peopleBO.setId(id);
         peopleBO.setUserId(uid);
+        peopleBO.setType(Constants.FLOW_PEOPLE);
 
         FlowPeopleBO flowPeopleBO = flowPeopleBiz.getFlowPeople(peopleBO);
         if (null == flowPeopleBO) {
@@ -155,9 +153,9 @@ public class FlowPeopleController {
         flowPeopleBO.setUserId(uid);
         List<FlowPeopleBO> flowPeopleBOS = flowPeopleBiz.getFlowPeoples(flowPeopleBO);
 
-        FlowRenterBO flowRenterBO = new FlowRenterBO();
+        /*FlowRenterBO flowRenterBO = new FlowRenterBO();
         flowRenterBO.setUserId(uid);
-        List<FlowRenterBO> flowRenterBOS = flowRenterBiz.getFlowRenterList(flowRenterBO);
+        List<FlowRenterBO> flowRenterBOS = flowRenterBiz.getFlowRenterList(flowRenterBO);*/
 
         List<FlowListVO> flowListVOS = new ArrayList<>();
 
@@ -165,19 +163,18 @@ public class FlowPeopleController {
             for (FlowPeopleBO peopleBO: flowPeopleBOS){
                 FlowListVO flowListVO = BeanConverter.convertObj(peopleBO, FlowListVO.class);
                 flowListVO.setGmtCreateStr(DateUtils.date2String(flowListVO.getGmtCreate(), "yyyy-MM-dd HH:mm:ss"));
-                flowListVO.setType(FLOW_PEOPLE);
                 flowListVOS.add(flowListVO);
             }
         }
 
-        if (null != flowRenterBOS && !flowRenterBOS.isEmpty()){
+        /*if (null != flowRenterBOS && !flowRenterBOS.isEmpty()){
             for (FlowRenterBO renterBO: flowRenterBOS){
                 FlowListVO flowListVO = BeanConverter.convertObj(renterBO, FlowListVO.class);
                 flowListVO.setGmtCreateStr(DateUtils.date2String(flowListVO.getGmtCreate(), "yyyy-MM-dd HH:mm:ss"));
-                flowListVO.setType(FLOW_RENTER);
+                flowListVO.setType(Constants.FLOW_RENTER);
                 flowListVOS.add(flowListVO);
             }
-        }
+        }*/
 
         return ResultDTO.wrapSuccess(flowListVOS);
     }

@@ -42,4 +42,7 @@ public class FlowPeopleVO {
 
     /** 房东手机 **/
     private String landlordPh;
+
+    /** 人员类型 **/
+    private Integer type;
 }

@@ -1,5 +1,8 @@
 package com.flow.web.controller;
 
+import com.flow.biz.FlowPeopleBiz;
+import com.flow.biz.bo.FlowPeopleBO;
+import com.flow.web.vo.FlowPeopleVO;
 import com.google.gson.Gson;
 import com.flow.biz.FlowRenterBiz;
 import com.flow.biz.bo.FlowRenterBO;
@@ -28,26 +31,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class FlowRenterController {
 
     @Autowired
-    private FlowRenterBiz flowRenterBiz;
+    private FlowPeopleBiz flowPeopleBiz;
 
     @RequestMapping(value = "renters", method = RequestMethod.POST)
     @ResponseBody
-    public ResultDTO addFlowRenter(@RequestBody FlowRenterVO flowRenterVO,
+    public ResultDTO addFlowRenter(@RequestBody FlowPeopleVO flowPeopleVO,
         HttpServletRequest request) {
-        log.debug("添加房主信息：{}", new Gson().toJson(flowRenterVO));
+        log.debug("添加房主信息：{}", new Gson().toJson(flowPeopleVO));
 
-        if (null == flowRenterVO) {
+        if (null == flowPeopleVO) {
             return ResultDTO.wrapError(Constants.CODE_NET_ERR, Constants.MSG_NET_ERR);
         }
 
         Integer uid = request.getIntHeader("uid");
         uid = uid == null ? Utils.getUid(uid, request.getCookies()) : uid;
 
-        FlowRenterBO flowRenterBO = BeanConverter.convertObj(flowRenterVO, FlowRenterBO.class);
+        FlowPeopleBO flowPeopleBO = BeanConverter.convertObj(flowPeopleVO, FlowPeopleBO.class);
 
-        flowRenterBO.setUserId(uid);
+        flowPeopleBO.setUserId(uid);
 
-        Integer result = flowRenterBiz.addFlowRenter(flowRenterBO);
+        if (null == flowPeopleBO.getType()){
+            flowPeopleBO.setType(Constants.FLOW_RENTER);
+        }
+
+        Integer result = flowPeopleBiz.addFlowPeople(flowPeopleBO);
 
         ResultDTO resultDTO = null;
         if (null == result) {
@@ -67,7 +74,7 @@ public class FlowRenterController {
             return ResultDTO.wrapError(Constants.CODE_NET_ERR, Constants.MSG_NET_ERR);
         }
 
-        Integer result = flowRenterBiz.delFlowRenter(id);
+        Integer result = flowPeopleBiz.delFlowPeople(id);
 
         ResultDTO resultDTO = null;
 
@@ -82,7 +89,7 @@ public class FlowRenterController {
 
     @RequestMapping(value = "renters/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResultDTO<FlowRenterVO> getFlowRenter(@PathVariable Integer id,
+    public ResultDTO<FlowPeopleVO> getFlowRenter(@PathVariable Integer id,
         HttpServletRequest request) {
         log.debug("获取房主信息：{}", id);
 
@@ -93,17 +100,18 @@ public class FlowRenterController {
         Integer uid = request.getIntHeader("uid");
         uid = uid == null ? Utils.getUid(uid, request.getCookies()) : uid;
 
-        FlowRenterBO renterBO = new FlowRenterBO();
-        renterBO.setId(id);
-        renterBO.setUserId(uid);
+        FlowPeopleBO peopleBO = new FlowPeopleBO();
+        peopleBO.setId(id);
+        peopleBO.setUserId(uid);
+        peopleBO.setType(Constants.FLOW_RENTER);
 
-        FlowRenterBO flowRenterBO = flowRenterBiz.getFlowRenter(renterBO);
+        FlowPeopleBO flowPeopleBO = flowPeopleBiz.getFlowPeople(peopleBO);
 
-        if (null == flowRenterBO) {
+        if (null == flowPeopleBO) {
             return ResultDTO.wrapError(Constants.CODE_RECORD_NOT_FIND, Constants.MSG_DB_CRUD_ERR);
         }
 
-        return ResultDTO.wrapSuccess(BeanConverter.convertObj(flowRenterBO, FlowRenterVO.class));
+        return ResultDTO.wrapSuccess(BeanConverter.convertObj(flowPeopleBO, FlowPeopleVO.class));
     }
 
     @RequestMapping(value = "renter/list", method = RequestMethod.GET)

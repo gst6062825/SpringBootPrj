@@ -45,4 +45,7 @@ public class FlowPeopleBO {
 
     /** 登录用户id */
     private Integer userId;
+
+    /** 人员类型 **/
+    private Integer type;
 }

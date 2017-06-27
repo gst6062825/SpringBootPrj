@@ -5,6 +5,7 @@ import com.flow.biz.bo.FlowPeopleBO;
 import com.flow.dal.mapper.FlowPeoplePOMapper;
 import com.flow.dal.po.FlowPeoplePO;
 import com.flow.dal.po.FlowPeoplePOExample;
+import com.flow.util.Constants;
 import com.quanmin110.common.converter.BeanConverter;
 import java.util.Date;
 import java.util.List;
@@ -40,11 +41,18 @@ public class FlowPeopleBizImpl implements FlowPeopleBiz{
         FlowPeoplePOExample flowPeoplePOExample = new FlowPeoplePOExample();
         FlowPeoplePOExample.Criteria criteria = flowPeoplePOExample.or();
 
+        criteria.andIsDeletedEqualTo("N");
+
         if (null != flowPeopleBO.getId()){
             criteria.andIdEqualTo(flowPeopleBO.getId());
         }
         if (null != flowPeopleBO.getUserId()){
             criteria.andUserIdEqualTo(flowPeopleBO.getUserId());
+        }
+        if (null != flowPeopleBO.getType()){
+            criteria.andTypeEqualTo(flowPeopleBO.getType().byteValue());
+        }else{
+            criteria.andTypeEqualTo(Constants.FLOW_PEOPLE.byteValue());
         }
 
         FlowPeoplePO flowPeoplePO = flowPeoplePOMapper.selectOneByExample(flowPeoplePOExample);
@@ -64,6 +72,10 @@ public class FlowPeopleBizImpl implements FlowPeopleBiz{
         FlowPeoplePOExample.Criteria criteria = flowPeoplePOExample.or();
 
         criteria.andIsDeletedEqualTo("N");
+
+        if (null != flowPeopleBO.getType()){
+            criteria.andTypeEqualTo(flowPeopleBO.getType().byteValue());
+        }
 
         if (null != flowPeopleBO.getId()){
             criteria.andIdEqualTo(flowPeopleBO.getId());

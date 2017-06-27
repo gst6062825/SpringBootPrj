@@ -15,6 +15,7 @@
     <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
     <result column="landlord_ph" jdbcType="VARCHAR" property="landlordPh" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="type" jdbcType="TINYINT" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, is_deleted, gmt_create, gmt_modified, name, id_card, phone, district, addr, department, 
-    landlord_name, landlord_ph, user_id
+    landlord_name, landlord_ph, user_id, type
   </sql>
   <select id="selectByExample" parameterType="com.flow.dal.po.FlowPeoplePOExample" resultMap="BaseResultMap">
     select
@@ -115,13 +116,13 @@
     insert into flow_people (is_deleted, gmt_create, gmt_modified, 
       name, id_card, phone, 
       district, addr, department, 
-      landlord_name, landlord_ph, user_id
-      )
+      landlord_name, landlord_ph, user_id, 
+      type)
     values (#{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
       #{name,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{district,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
-      #{landlordName,jdbcType=VARCHAR}, #{landlordPh,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}
-      )
+      #{landlordName,jdbcType=VARCHAR}, #{landlordPh,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{type,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.flow.dal.po.FlowPeoplePO">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -165,6 +166,9 @@
       <if test="userId != null">
         user_id,
       </if>
+      <if test="type != null">
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="isDeleted != null">
@@ -202,6 +206,9 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -253,6 +260,9 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -272,7 +282,8 @@
       department = #{record.department,jdbcType=VARCHAR},
       landlord_name = #{record.landlordName,jdbcType=VARCHAR},
       landlord_ph = #{record.landlordPh,jdbcType=VARCHAR},
-      user_id = #{record.userId,jdbcType=INTEGER}
+      user_id = #{record.userId,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=TINYINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -316,6 +327,9 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -332,7 +346,8 @@
       department = #{department,jdbcType=VARCHAR},
       landlord_name = #{landlordName,jdbcType=VARCHAR},
       landlord_ph = #{landlordPh,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER}
+      user_id = #{userId,jdbcType=INTEGER},
+      type = #{type,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="com.flow.dal.po.FlowPeoplePOExample" resultMap="BaseResultMap">

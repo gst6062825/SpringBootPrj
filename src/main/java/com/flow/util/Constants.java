@@ -5,6 +5,12 @@ package com.flow.util;
  */
 public class Constants {
 
+    /** 流动人口类型 **/
+    public static final Integer FLOW_PEOPLE = 1;
+
+    /** 房屋类型 **/
+    public static final Integer FLOW_RENTER = 2;
+
     /**
      * 网络开小差
      */
