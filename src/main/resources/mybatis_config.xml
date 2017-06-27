@@ -33,7 +33,7 @@
     </settings>
 
     <typeAliases>
-        <package name="com.pocketdigi.dal.po"/>
+        <package name="com.flow.dal.po"/>
     </typeAliases>
 </configuration>
 
